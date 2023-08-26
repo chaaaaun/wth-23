@@ -14,7 +14,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/chaaaaun/wth-23.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/chaaaaun/wth-23/network/)
 
 
-**Ah Boy** is an innovative speech-to-speech chatbot designed to be the ultimate digital sidekick for the seniors in Singapore.
+**Ah Boy** is an innovative speech-to-text chatbot designed to be the ultimate digital sidekick for the seniors in Singapore.
 In a rapidly advancing digital world, bridging the generation gap between technology and seniors has never been more crucial.
 Just like a caring grandchild, Ah Boy is here to lend a patient and understanding hand to seniors
 as they navigate the complexities of modern technology.
@@ -24,8 +24,8 @@ as they navigate the complexities of modern technology.
 ### Dialect Support
 Majority of the seniors in Singapore are more versed in dialects such as Hokkien. Our chatbot allows for dialect voice inputs, making it incredibly intuitive and accessible for seniors.
 
-### Speech-to-speech
-Our chatbot communicates directly through speech, greatly reducing the need for seniors to type lengthy and complex words for output.
+### Speech-to-text
+Our chatbot allows input directly through speech, greatly reducing the need for seniors to type lengthy and complex words.
 
 ### Simplified Instructions
 Complex tech jargon is transformed into simple, clear instructions that empower seniors to understand technology with ease.
