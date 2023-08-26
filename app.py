@@ -32,7 +32,15 @@ def handle():
                 return abort(400, q[1])
             ans = query_to_response(q[0])
             print(ans)
-            return {"data":  {"text": ans} }, 200     
+            return {
+                'statusCode': 200,
+                'headers': {
+                    'Access-Control-Allow-Headers': '*',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': '*'
+                },
+                'data': ans
+            } 
             
             res = from_response(ans)
             if res[1] != "":
