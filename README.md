@@ -1,7 +1,7 @@
 <br />
 
 <p align="center">
-  <img src="https://github.com/chaaaaun/wth-23/assets/87000020/2367511d-606b-4c32-9538-2b1ea509dfb6.svg" width="300" height="300">
+  <img src="https://github.com/chaaaaun/wth-23/assets/87000020/45c2fcf4-7559-4328-a171-bab646d78281.svg" width="300" height="300">
 </p>
 
 <p align="center">
@@ -13,3 +13,29 @@
 An accessible, cost-effective, and smart digital solution, 
 Ah Boy significantly reduces reliance on physical companionship 
 and provides elderlies greater convenience to proceed with their daily tasks.
+
+## Features
+
+### 
+
+## Usage
+
+### Installation
+
+1. Install the required dependencies.
+````
+pip install openai
+pip install gradio
+````
+
+2. [Fork](https://github.com/chaaaaun/wth-23/fork) or clone this repository to access the source code.
+
+### Deployment
+
+3. To access the application, navigate to the root directory in the terminal and run
+````
+python main.py
+````
+
+## Acknowledgements
+This project is an undertaking of What The Heck 2023 organised by Singapore University of Technology and Design under the theme of Inclusivity & Accessibility Tech.
