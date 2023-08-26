@@ -32,7 +32,7 @@ def handle():
                 return abort(400, q[1])
             ans = query_to_response(q[0])
             print(ans)
-            # return {'data':ans }, 200      
+            return {"data":  {"text": ans} }, 200     
             
             res = from_response(ans)
             if res[1] != "":

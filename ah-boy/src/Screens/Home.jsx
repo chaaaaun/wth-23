@@ -1,15 +1,18 @@
-import { Button, Circle, Heading, Box, others } from "@chakra-ui/react";
+import { Button, Circle, Heading, Box, others, Alert, AlertIcon, CloseButton, AlertDescription, AlertTitle } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 import { LiveAudioVisualizer } from 'react-audio-visualize';
 
 export default function Home() {
     const [gptReply, setGptReply] = useState('ChatGPT answer');
+    const [loading, setLoading] = useState(false)
+    const[alert, setAlert] = useState(false)
 
     // Mic recorder
     const addAudioElement = async (blob) => {
         const data = new FormData();
         data.append('file', blob);
+        setLoading(!loading)
         const output = await fetch('http://localhost:5000/api', {
                                     method: 'post',
                                     body: data,
@@ -25,6 +28,10 @@ export default function Home() {
                                     // audio.src = url;
                                     // audio.controls = true;
                                     // document.body.appendChild(audio);
+                                    setLoading(false);
+                                }).catch(e => {
+                                    setLoading(false);
+                                    setAlert(true);
                                 })
                                     
 
@@ -57,15 +64,35 @@ export default function Home() {
         stopRecording();
       };
 
+    const onClose = () => {
+        setAlert(false);
+    }
+
     return (
         <>
+            {alert && <Alert status='error'>
+                <AlertIcon />
+                <Box>
+                    <AlertTitle>Error!</AlertTitle>
+                    <AlertDescription>
+                    Something went wrong! Please try again
+                    </AlertDescription>
+                </Box>
+                <CloseButton
+                    alignSelf='flex-start'
+                    position='relative'
+                    right={-1}
+                    top={-1}
+                    onClick={onClose}
+                />
+            </Alert>}
             <div>
-                <Heading>
-                    Ask us a question!
+                <Heading style={{marginBottom: 16}}>
+                    Ask Ah Boy a question!
                 </Heading>
             </div>
 
-            <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' p='6' content="">
+            <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' p='6' content="" style={{marginBottom: 16}}>
                 {gptReply}
             </Box>
 
@@ -77,7 +104,7 @@ export default function Home() {
                 />
             )}
 
-            {!isRecording && <Button size="lg" colorScheme="red" variant="solid" onClick={start}>
+            {!isRecording && <Button isLoading={loading} size="lg" colorScheme="red" variant="solid" onClick={start}>
                 Record
             </Button>}
 
