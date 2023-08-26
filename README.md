@@ -1,7 +1,7 @@
 <br />
 
 <p align="center">
-  <img src="https://github.com/chaaaaun/wth-23/assets/87000020/4e140fdd-b11b-4f5e-825f-0ef1b9bc721a.svg" width="300" height="300">
+  <img src="https://github.com/chaaaaun/wth-23/assets/87000020/2367511d-606b-4c32-9538-2b1ea509dfb6.svg" width="300" height="300">
 </p>
 
 <p align="center">
