@@ -1,10 +1,12 @@
 import base64
 import os
+import json
 
 import openai
 import requests
 from flask import Flask
-from flask import abort, request
+from flask import abort, request, Response
+from decouple import config
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
@@ -30,10 +32,12 @@ def handle():
                 return abort(400, q[1])
             ans = query_to_response(q[0])
             print(ans)
+            # return {'data':ans }, 200      
+            
             res = from_response(ans)
             if res[1] != "":
                 return abort(400, res[1])
-            return res[0]
+            return {"data":  {"text": ans} }, 200
 
 
 api_urls = {
@@ -45,12 +49,18 @@ api_urls = {
 headers = {"Authorization": f'Bearer {os.getenv("HF_TOKEN")}'}
 openai.api_key = os.getenv("AI_TOKEN")
 
+if headers["Authorization"] == 'Bearer None':
+    headers = {"Authorization": f'Bearer {config("HF_TOKEN")}'}
+    openai.api_key = config('AI_TOKEN')
+
 ERR_FAILED_AUD = "Failed to process audio, please try again later."
 
 
 def to_query(audio) -> (str, str):
     eng_aud_res = requests.post(api_urls["HK_TO_ENG"], headers=headers, data=audio)
     if eng_aud_res.status_code != 200:
+        print(eng_aud_res.content)
+        print(headers)
         return "", ERR_FAILED_AUD
 
     eng_aud_obj = eng_aud_res.json()
@@ -67,7 +77,7 @@ def to_query(audio) -> (str, str):
 def query_to_response(query) -> str:
     messages = [{"role": "system",
                  "content": "The user is an elderly living in Singapore. You are a helpful AI assistant helping the "
-                            "user. Replies should be summarised in 30 words."},
+                            "user. Replies should be summarised in 30 words and in Chinese."},
                 {"role": "user", "content": query}]
     chat = openai.ChatCompletion.create(
         model="gpt-3.5-turbo", messages=messages

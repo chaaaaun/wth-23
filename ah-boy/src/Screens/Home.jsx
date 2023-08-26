@@ -1,17 +1,36 @@
-import { Button, Circle, Heading, Box } from "@chakra-ui/react";
+import { Button, Circle, Heading, Box, others } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 import { LiveAudioVisualizer } from 'react-audio-visualize';
 
 export default function Home() {
+    const [gptReply, setGptReply] = useState('ChatGPT answer');
+
     // Mic recorder
-    const addAudioElement = (blob) => {
-        const url = URL.createObjectURL(blob);
-        const audio = document.createElement("audio");
-        audio.src = url;
-        audio.controls = true;
-        document.body.appendChild(audio);
-      };
+    const addAudioElement = async (blob) => {
+        const data = new FormData();
+        data.append('file', blob);
+        const output = await fetch('http://localhost:5000/api', {
+                                    method: 'post',
+                                    body: data,
+                                }).then(response => {
+                                    var reply = response.json()
+                                    console.log(reply)
+                                    return reply;
+                                }).then(data => {
+                                    console.log(data)
+                                    setGptReply(data.data.text)
+                                    // const url = URL.createObjectURL(data.data.audio.data);
+                                    // const audio = document.createElement("audio");
+                                    // audio.src = url;
+                                    // audio.controls = true;
+                                    // document.body.appendChild(audio);
+                                })
+                                    
+
+
+                                
+    };
     
     const {
         startRecording,
@@ -46,8 +65,8 @@ export default function Home() {
                 </Heading>
             </div>
 
-            <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' p='6' >
-                Chatgpt answer
+            <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' p='6' content="">
+                {gptReply}
             </Box>
 
             {mediaRecorder && (
