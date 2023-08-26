@@ -87,6 +87,7 @@ export default function Home() {
                 />
             </Alert>}
             <div>
+                <img src="/src/assets/ahboy_grey.svg" width={350} height={300} />
                 <Heading style={{marginBottom: 16}}>
                     Ask Ah Boy a question!
                 </Heading>
