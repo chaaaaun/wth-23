@@ -29,7 +29,7 @@ export default function Home() {
                                 }).then(data => {
                                     console.log(data)
                                     setGptReply(data.data)
-                                    setChildren(children => [...children, <Reply content={data.data}/>])
+                                    setChildren(children => [<Reply content={data.data}/>, ...children])
                                     // const url = URL.createObjectURL(data.data.audio.data);
                                     // const audio = document.createElement("audio");
                                     // audio.src = url;
@@ -76,7 +76,7 @@ export default function Home() {
     }
 
     return (
-        <>
+        <Box flex={1}>
             <Center>
                 {alert && <Alert status='error' maxW='400px'> 
                     <AlertIcon />
@@ -98,7 +98,7 @@ export default function Home() {
             <Box flexDirection='column'>
                 <Box flexDirection='column' >
                     <Center>
-                        <img src="/src/assets/ahboy_grey.svg" width={350} height={300} />
+                        <img src="/src/assets/ahboy_grey.svg" width={250} height={200} />
                     </Center>
                     <Box>
                         <Slider defaultValue={40} min={20} max={60} step={5} onChange={(val) => setSliderValue(val)} w='400px'>
@@ -118,14 +118,13 @@ export default function Home() {
                 </Heading>
                 
             </Box>
-            <Center>
-                <Box maxW='800px' w='100%' borderWidth='1px' borderRadius='lg' overflow='visible' p='100' content="" style={{marginBottom: 16}} boxSizing="70%" fontSize={sliderValue}>
-                        ChatGPT replies
-                        {children}
-                    <Skeleton isLoaded={!loading} height='100px'/>
-                </Box>
-            </Center>
-            
+            {!isRecording && <Button isLoading={loading} size="lg" colorScheme="red" variant="solid" onClick={start}>
+                Record
+            </Button>}
+
+            {isRecording && <Button size="lg" colorScheme="green" variant="solid" onClick={stop}> 
+                Stop
+            </Button>}
             <Center>
                 {mediaRecorder && (
                     <LiveAudioVisualizer
@@ -135,14 +134,13 @@ export default function Home() {
                     />
                 )}
             </Center>
-
-            {!isRecording && <Button isLoading={loading} size="lg" colorScheme="red" variant="solid" onClick={start}>
-                Record
-            </Button>}
-
-            {isRecording && <Button size="lg" colorScheme="green" variant="solid" onClick={stop}> 
-                Stop
-            </Button>}
-        </>
-    )
+            <Center>
+                <Box maxW='800px' w='100%' borderWidth='1px' borderRadius='lg' overflow='visible' p='30' content="" style={{marginBottom: 16, marginTop: 16}} boxSizing="70%" fontSize={sliderValue}>
+                        ChatGPT replies
+                        <Skeleton isLoaded={!loading} height='100px'/>
+                        {children}  
+                </Box>
+            </Center>
+            
+        </Box>)
 }

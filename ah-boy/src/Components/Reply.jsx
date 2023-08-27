@@ -9,7 +9,7 @@ export default function Reply({ content, audio }) {
     }
 
     return(
-        <Box bg='green.200' style={{marginBottom: 16}} w='100%' borderRadius='lg' overflow='visible' p='10' 
+        <Box bg='green.200' style={{marginBottom: 16, marginTop: 16}} w='100%' borderRadius='lg' overflow='visible' p='10' 
             flexDirection='column' justifyContent='center' alignItems='center'>
             <div>
                 {content}
