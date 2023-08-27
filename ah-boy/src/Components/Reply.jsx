@@ -1,6 +1,6 @@
 import { Box, Button, IconButton, Icon } from "@chakra-ui/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faVolumeHigh, faBullhorn } from '@fortawesome/free-solid-svg-icons'
 
 
 export default function Reply({ content, audio }) {
@@ -14,8 +14,8 @@ export default function Reply({ content, audio }) {
             <div>
                 {content}
             </div>
-            <Button colorScheme="teal" borderRadius='lg' onClick={onPlay} size='lg' style={{marginTop: 16}}>
-                <FontAwesomeIcon icon={faPlay} />
+            <Button colorScheme="teal" borderRadius='lg' onClick={onPlay} size='lg' style={{marginTop: 16}} p={10}>
+                <FontAwesomeIcon icon={faVolumeHigh} size="2xl"/>
             </Button>
         </Box>
     )

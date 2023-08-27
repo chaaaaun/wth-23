@@ -137,7 +137,9 @@ export default function Home() {
                                 <Box position='relative' right={10} />
                                 <SliderFilledTrack bg='tomato' />
                             </SliderTrack>
-                            <SliderThumb boxSize={6} />
+                            <SliderThumb boxSize={6} bgColor='tomato'>
+                            </SliderThumb>
+
                         </Slider>
                         <Box fontSize='24' fontFamily="Microsoft Yahei">
                             字体大小
