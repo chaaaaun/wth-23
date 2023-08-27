@@ -39,17 +39,19 @@ Unlike seniors' grandchildren who are constantly busy, our chatbot is available 
 
 1. Install the required dependencies.
 ````
-pip install openai
-pip install gradio
+pip install -r requirements.txt
 ````
 
 2. [Fork](https://github.com/chaaaaun/wth-23/fork) or clone this repository to access the source code.
+````
+git clone https://github.com/chaaaaun/wth-23.git
+````
 
 ### Deployment
 
-3. To access the application, navigate to the root directory in the terminal and run
+3. To access the application, navigate to the project directory in the terminal and run
 ````
-python main.py
+npm run dev
 ````
 
 ## Acknowledgements
