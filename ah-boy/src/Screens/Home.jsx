@@ -7,7 +7,7 @@ import {
     Button,
     Center,
     CloseButton,
-    Heading, Icon,
+    Heading,
     Skeleton,
     Slider,
     SliderFilledTrack,
@@ -19,7 +19,7 @@ import {useAudioRecorder} from 'react-audio-voice-recorder';
 import {LiveAudioVisualizer} from 'react-audio-visualize';
 import Reply from "../Components/Reply";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faSquare, faMicrophone } from '@fortawesome/free-solid-svg-icons'
+import {faMicrophone, faSquare} from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
     const [gptReply, setGptReply] = useState('ChatGPT answers will appear here!');
@@ -38,20 +38,10 @@ export default function Home() {
         await fetch('http://localhost:5000/api', {
                                     method: 'post',
                                     body: data,
-                                }).then(response => {
-            const reply = response.json();
-            console.log(reply)
-                                    return reply;
-                                }).then(data => {
+                                }).then(response => response.json()).then(data => {
                                     console.log(data)
                                     setGptReply(data['ans'])
-                                    setChildren(children => [<Reply content={data.data}/>, ...children])
-                                    const blob = b64toBlob(data['blob'], data['content-type']);
-                                    const blobUrl = URL.createObjectURL(blob);
-                                    const audio = document.createElement("audio");
-                                    audio.src = blobUrl;
-                                    audio.controls = true;
-                                    document.body.appendChild(audio);
+                                    setChildren(children => [<Reply content={data} />, ...children])
                                 })
                                 .catch(e => setAlert(true))
                                 .finally(() => setLoading(false))
@@ -86,24 +76,6 @@ export default function Home() {
         setAlert(false);
     }
 
-    const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
-        const byteCharacters = atob(b64Data);
-        const byteArrays = [];
-
-        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-            const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-            const byteNumbers = new Array(slice.length);
-            for (let i = 0; i < slice.length; i++) {
-                byteNumbers[i] = slice.charCodeAt(i);
-            }
-
-            const byteArray = new Uint8Array(byteNumbers);
-            byteArrays.push(byteArray);
-        }
-
-        return new Blob(byteArrays, {type: contentType});
-    }
 
 
     return (

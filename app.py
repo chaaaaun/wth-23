@@ -29,15 +29,13 @@ def handle():
                 return abort(400, q[1])
             cn_ans, en_ans = query_to_response(q[0])
             print(cn_ans)
-            res = from_response(en_ans)
-            if res[1] != "":
-                return abort(400, res[1])
-
+            # res = from_response(en_ans)
+            # if res[1] != "":
+            #     return abort(400, res[1])
+            #
             response = make_response({
                 'ans': cn_ans,
-                'data': res[0][0]
             })
-            response.status_code = 200
             response.headers['Access-Control-Allow-Headers'] = '*'
             response.headers['Access-Control-Allow-Origin'] = '*'
             response.headers['Access-Control-Allow-Methods'] = '*'
@@ -46,9 +44,8 @@ def handle():
 
 api_urls = {
     "HK_TO_ENG": "https://api-inference.huggingface.co/models/facebook/xm_transformer_unity_hk-en",
-    "ENG_TO_HK": "https://api-inference.huggingface.co/models/facebook/xm_transformer_unity_en-hk",
     "ENG_TO_TEXT": "https://api-inference.huggingface.co/models/jonatasgrosman/wav2vec2-large-xlsr-53-english",
-    "TEXT_TO_ENG": "https://api-inference.huggingface.co/models/facebook/fastspeech2-en-ljspeech"
+    "TEXT_TO_CN": "https://api-inference.huggingface.co/models/suno/bark-small"
 }
 headers = {"Authorization": f'Bearer {os.getenv("HF_TOKEN")}'}
 openai.api_key = os.getenv("AI_TOKEN")
@@ -78,7 +75,7 @@ def to_query(audio) -> (str, str):
     return eng_text["text"], ""
 
 
-def query_to_response(query) -> (str, str):
+def query_to_response(query) -> str:
     messages = [{"role": "system",
                  "content": "The user is an elderly living in Singapore with little knowledge on tech. You are a "
                             "helpful AI assistant helping the user. Replies should be summarised in Chinese and in 30 characters."},
@@ -88,24 +85,16 @@ def query_to_response(query) -> (str, str):
     )
     cn_reply = chat.choices[0].message.content
     messages.append({"role": "assistant", "content": cn_reply})
-    messages.append({"role": "system", "content": "Translate your above response into English."})
-    en_reply = chat.choices[0].message.content
-    return cn_reply, en_reply
+    return cn_reply
 
 
 def from_response(text) -> (str, str):
     text_req = {
         "inputs": text
     }
-    eng_aud_res = requests.post(api_urls["TEXT_TO_ENG"], headers=headers, data=text_req)
+    eng_aud_res = requests.post(api_urls["TEXT_TO_CN"], headers=headers, data=text_req)
     if eng_aud_res.status_code != 200:
         print("ENG", eng_aud_res.content)
         return "", ERR_FAILED_AUD
 
-    hk_aud_res = requests.post(api_urls["ENG_TO_HK"], headers=headers, data=eng_aud_res)
-    if hk_aud_res.status_code != 200:
-        print("HK", hk_aud_res.content)
-        return "", ERR_FAILED_AUD
-    hk_aud = hk_aud_res.json()
-
-    return hk_aud, ""
+    return eng_aud_res, ""
