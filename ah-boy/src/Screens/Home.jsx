@@ -108,13 +108,13 @@ export default function Home() {
                             </SliderTrack>
                             <SliderThumb boxSize={6} />
                         </Slider>
-                        <Box>
-                            Font size
+                        <Box fontSize='24' fontFamily="Microsoft Yahei">
+                            字体大小
                         </Box>
                     </Box>
                 </Box>
-                <Heading style={{marginBottom: 16}}>
-                    Ask Ah Boy a question!
+                <Heading style={{marginBottom: 16}} fontWeight='bold' fontFamily="Microsoft Yahei">
+                    问 ah boy!
                 </Heading>
                 
             </Box>
@@ -135,8 +135,10 @@ export default function Home() {
                 )}
             </Center>
             <Center>
-                <Box maxW='800px' w='100%' borderWidth='1px' borderRadius='lg' overflow='visible' p='30' content="" style={{marginBottom: 16, marginTop: 16}} boxSizing="70%" fontSize={sliderValue}>
-                        ChatGPT replies
+                <Box maxW='800px' w='100%' borderWidth='1px' borderRadius='lg' overflow='visible' p='30' content="" 
+                    style={{marginBottom: 16, marginTop: 16}} boxSizing="70%" fontSize={sliderValue} 
+                    fontFamily="Microsoft Yahei">
+                        回答
                         {loading && <Skeleton isLoaded={!loading} height='100px'/>}
                         {children}  
                 </Box>
