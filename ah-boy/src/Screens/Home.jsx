@@ -107,14 +107,14 @@ export default function Home() {
 
 
     return (
-        <Box flex={1} justifyContent="center" width={["300px", "500px"]}>
+        <Box flex={1} justifyContent="center" width='100%' h='100%' minHeight='100vh'>
             <Center flex={1}>
-                {alert && <Alert status='error' maxW='400px'> 
+                {alert && <Alert status='error' maxW='500px'> 
                     <AlertIcon />
-                    <Box flex={1}>
-                        <AlertTitle>Error!</AlertTitle>
+                    <Box flex={1} fontFamily="Microsoft Yahei" fontSize='24'>
+                        <AlertTitle>错误警告！</AlertTitle>
                         <AlertDescription>
-                        Something went wrong! Please try again
+                        对不起，出现了状况。请再重试！
                         </AlertDescription>
                     </Box>
                     <CloseButton
