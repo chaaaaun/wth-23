@@ -84,8 +84,8 @@ def to_query(audio) -> (str, str):
 
 def query_to_response(query) -> str:
     messages = [{"role": "system",
-                 "content": "The user is an elderly living in Singapore. You are a helpful AI assistant helping the "
-                            "user. Replies should be summarised in 30 words and in Chinese."},
+                 "content": "The user is an elderly living in Singapore with little knowledge on tech. You are a helpful AI assistant helping the "
+                            "user. Replies should be summarised in Chinese and in 30 characters."},
                 {"role": "user", "content": query}]
     chat = openai.ChatCompletion.create(
         model="gpt-3.5-turbo", messages=messages
