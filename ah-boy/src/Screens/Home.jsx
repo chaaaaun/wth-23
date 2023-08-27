@@ -77,7 +77,7 @@ export default function Home() {
 
     return (
         <Box flex={1}>
-            <Center>
+            <Center flex={1}>
                 {alert && <Alert status='error' maxW='400px'> 
                     <AlertIcon />
                     <Box flex={1}>
@@ -95,13 +95,13 @@ export default function Home() {
                     />
                 </Alert>}
             </Center>
-            <Box flexDirection='column'>
+            <Box flexDirection='column' flex={1}>
                 <Box flexDirection='column' >
                     <Center>
                         <img src="/src/assets/ahboy_grey.svg" width={250} height={200} />
                     </Center>
                     <Box>
-                        <Slider defaultValue={40} min={20} max={60} step={5} onChange={(val) => setSliderValue(val)} w='400px'>
+                        <Slider defaultValue={40} min={20} max={60} step={5} onChange={(val) => setSliderValue(val)} w='80%'>
                             <SliderTrack bg='red.100'>
                                 <Box position='relative' right={10} />
                                 <SliderFilledTrack bg='tomato' />
@@ -137,7 +137,7 @@ export default function Home() {
             <Center>
                 <Box maxW='800px' w='100%' borderWidth='1px' borderRadius='lg' overflow='visible' p='30' content="" style={{marginBottom: 16, marginTop: 16}} boxSizing="70%" fontSize={sliderValue}>
                         ChatGPT replies
-                        <Skeleton isLoaded={!loading} height='100px'/>
+                        {loading && <Skeleton isLoaded={!loading} height='100px'/>}
                         {children}  
                 </Box>
             </Center>
