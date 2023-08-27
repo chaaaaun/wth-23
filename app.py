@@ -5,8 +5,7 @@ import json
 import openai
 import requests
 from flask import Flask
-from flask import abort, request, Response
-from decouple import config
+from flask import abort, request, make_response
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
@@ -15,37 +14,34 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
 @app.route("/api", methods=['POST'])
 def handle():
     if request.method == 'POST':
-        # check if the post request has the file part
         if 'file' not in request.files:
             print('No file part')
             abort(400)
         file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
         if file.filename == '':
             print('No selected file')
             return abort(400)
+
         if file:
             q = to_query(file)
             print(q)
             if q[1] != "":
                 return abort(400, q[1])
-            ans = query_to_response(q[0])
-            print(ans)
-            return {
-                'statusCode': 200,
-                'headers': {
-                    'Access-Control-Allow-Headers': '*',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': '*'
-                },
-                'data': ans
-            } 
-            
-            res = from_response(ans)
+            cn_ans, en_ans = query_to_response(q[0])
+            print(cn_ans)
+            res = from_response(en_ans)
             if res[1] != "":
                 return abort(400, res[1])
-            return {"data":  {"text": ans} }, 200
+
+            response = make_response({
+                'ans': cn_ans,
+                'data': res[0][0]
+            })
+            response.status_code = 200
+            response.headers['Access-Control-Allow-Headers'] = '*'
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Access-Control-Allow-Methods'] = '*'
+            return response
 
 
 api_urls = {
@@ -58,8 +54,8 @@ headers = {"Authorization": f'Bearer {os.getenv("HF_TOKEN")}'}
 openai.api_key = os.getenv("AI_TOKEN")
 
 if headers["Authorization"] == 'Bearer None':
-    headers = {"Authorization": f'Bearer {config("HF_TOKEN")}'}
-    openai.api_key = config('AI_TOKEN')
+    headers = {"Authorization": f'Bearer {os.getenv("HF_TOKEN")}'}
+    openai.api_key = os.getenv('AI_TOKEN')
 
 ERR_FAILED_AUD = "Failed to process audio, please try again later."
 
@@ -82,17 +78,19 @@ def to_query(audio) -> (str, str):
     return eng_text["text"], ""
 
 
-def query_to_response(query) -> str:
+def query_to_response(query) -> (str, str):
     messages = [{"role": "system",
-                 "content": "The user is an elderly living in Singapore with little knowledge on tech. You are a helpful AI assistant helping the "
-                            "user. Replies should be summarised in Chinese and in 30 characters."},
+                 "content": "The user is an elderly living in Singapore with little knowledge on tech. You are a "
+                            "helpful AI assistant helping the user. Replies should be summarised in Chinese and in 30 characters."},
                 {"role": "user", "content": query}]
     chat = openai.ChatCompletion.create(
         model="gpt-3.5-turbo", messages=messages
     )
-    reply = chat.choices[0].message.content
-    messages.append({"role": "assistant", "content": reply})
-    return reply
+    cn_reply = chat.choices[0].message.content
+    messages.append({"role": "assistant", "content": cn_reply})
+    messages.append({"role": "system", "content": "Translate your above response into English."})
+    en_reply = chat.choices[0].message.content
+    return cn_reply, en_reply
 
 
 def from_response(text) -> (str, str):

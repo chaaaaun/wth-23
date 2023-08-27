@@ -1,9 +1,25 @@
-import { Button, Circle, Heading, Box, others, Alert, AlertIcon, CloseButton, AlertDescription, AlertTitle, Center, Flex,
-        Slider, SliderFilledTrack, SliderThumb, SliderMark, SliderTrack, Skeleton } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
-import { LiveAudioVisualizer } from 'react-audio-visualize';
+import {
+    Alert,
+    AlertDescription,
+    AlertIcon,
+    AlertTitle,
+    Box,
+    Button,
+    Center,
+    CloseButton,
+    Heading, Icon,
+    Skeleton,
+    Slider,
+    SliderFilledTrack,
+    SliderThumb,
+    SliderTrack
+} from "@chakra-ui/react";
+import {useEffect, useState} from "react";
+import {useAudioRecorder} from 'react-audio-voice-recorder';
+import {LiveAudioVisualizer} from 'react-audio-visualize';
 import Reply from "../Components/Reply";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faSquare, faMicrophone } from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
     const [gptReply, setGptReply] = useState('ChatGPT answers will appear here!');
@@ -18,32 +34,27 @@ export default function Home() {
     const addAudioElement = async (blob) => {
         const data = new FormData();
         data.append('file', blob);
-        setLoading(!loading)
-        const output = await fetch('http://localhost:5000/api', {
+        setLoading(true)
+        await fetch('http://localhost:5000/api', {
                                     method: 'post',
                                     body: data,
                                 }).then(response => {
-                                    var reply = response.json()
-                                    console.log(reply)
+            const reply = response.json();
+            console.log(reply)
                                     return reply;
                                 }).then(data => {
                                     console.log(data)
-                                    setGptReply(data.data)
+                                    setGptReply(data['ans'])
                                     setChildren(children => [<Reply content={data.data}/>, ...children])
-                                    // const url = URL.createObjectURL(data.data.audio.data);
-                                    // const audio = document.createElement("audio");
-                                    // audio.src = url;
-                                    // audio.controls = true;
-                                    // document.body.appendChild(audio);
-                                    setLoading(false);
-                                }).catch(e => {
-                                    setLoading(false);
-                                    setAlert(true);
+                                    const blob = b64toBlob(data['blob'], data['content-type']);
+                                    const blobUrl = URL.createObjectURL(blob);
+                                    const audio = document.createElement("audio");
+                                    audio.src = blobUrl;
+                                    audio.controls = true;
+                                    document.body.appendChild(audio);
                                 })
-                                    
-
-
-                                
+                                .catch(e => setAlert(true))
+                                .finally(() => setLoading(false))
     };
     
     const {
@@ -75,8 +86,28 @@ export default function Home() {
         setAlert(false);
     }
 
+    const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+        const byteCharacters = atob(b64Data);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+
+        return new Blob(byteArrays, {type: contentType});
+    }
+
+
     return (
-        <Box flex={1}>
+        <Box flex={1} justifyContent="center" width={["300px", "500px"]}>
             <Center flex={1}>
                 {alert && <Alert status='error' maxW='400px'> 
                     <AlertIcon />
@@ -118,12 +149,12 @@ export default function Home() {
                 </Heading>
                 
             </Box>
-            {!isRecording && <Button isLoading={loading} size="lg" colorScheme="red" variant="solid" onClick={start}>
-                Record
+            {!isRecording && <Button isLoading={loading} p={10} colorScheme="red" variant="solid" onClick={start}>
+                <FontAwesomeIcon icon={faMicrophone} size='2xl' />
             </Button>}
 
-            {isRecording && <Button size="lg" colorScheme="green" variant="solid" onClick={stop}> 
-                Stop
+            {isRecording && <Button p={10} colorScheme="green" variant="solid" onClick={stop}>
+                <FontAwesomeIcon icon={faSquare} size='2xl' />
             </Button>}
             <Center>
                 {mediaRecorder && (
